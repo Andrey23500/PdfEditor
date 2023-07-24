@@ -56,9 +56,9 @@ namespace PdfEditor
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label5.Location = new System.Drawing.Point(12, 591);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(52, 17);
+            this.label5.Size = new System.Drawing.Size(57, 17);
             this.label5.TabIndex = 30;
-            this.label5.Text = "Поиск:";
+            this.label5.Text = "Search:";
             // 
             // textBox2
             // 
@@ -75,11 +75,11 @@ namespace PdfEditor
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label4.Location = new System.Drawing.Point(573, 705);
+            this.label4.Location = new System.Drawing.Point(604, 705);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 17);
+            this.label4.Size = new System.Drawing.Size(41, 17);
             this.label4.TabIndex = 28;
-            this.label4.Text = "Страница";
+            this.label4.Text = "Page";
             this.label4.Visible = false;
             // 
             // label3
@@ -88,9 +88,9 @@ namespace PdfEditor
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label3.Location = new System.Drawing.Point(1008, 140);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 17);
+            this.label3.Size = new System.Drawing.Size(47, 17);
             this.label3.TabIndex = 27;
-            this.label3.Text = "Масштаб:";
+            this.label3.Text = "Scale:";
             this.label3.Visible = false;
             // 
             // trackBar1
@@ -133,9 +133,9 @@ namespace PdfEditor
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label1.Location = new System.Drawing.Point(690, 705);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(23, 17);
+            this.label1.Size = new System.Drawing.Size(20, 17);
             this.label1.TabIndex = 22;
-            this.label1.Text = "из";
+            this.label1.Text = "of";
             this.label1.Visible = false;
             // 
             // textBox1
@@ -216,7 +216,7 @@ namespace PdfEditor
             this.Controls.Add(this.button3);
             this.Controls.Add(this.listBox1);
             this.Name = "PdfEditor";
-            this.Text = "Form1";
+            this.Text = "PdfEditor";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();

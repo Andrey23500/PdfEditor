@@ -47,48 +47,47 @@ namespace PdfEditor
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 selectedFolder = fbd.SelectedPath;
-            }
-            if (selectedFolder != String.Empty)
-            {
-                var info = new DirectoryInfo(selectedFolder);
-                var fileIO = info.GetFiles("*.pdf", SearchOption.AllDirectories);
-                List<FileInfo> list = new List<FileInfo>();
-                for (int i = 0; i < fileIO.Length; i++)
+                if (selectedFolder != String.Empty)
                 {
-                    if (fileIO[i].Exists)
+                    var info = new DirectoryInfo(selectedFolder);
+                    var fileIO = info.GetFiles("*.pdf", SearchOption.AllDirectories);
+                    List<FileInfo> list = new List<FileInfo>();
+                    for (int i = 0; i < fileIO.Length; i++)
                     {
-                        list.Add(fileIO[i]);
+                        if (fileIO[i].Exists)
+                        {
+                            list.Add(fileIO[i]);
+                        }
+                    }
+                    list.Sort((x, y) => y.CreationTime.CompareTo(x.CreationTime));
+
+                    List<string> list2 = new List<string>();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        list2.Add(list[i].FullName);
+                    }
+                    for (int i = 0; i < list2.Count; i++)
+                    {
+                        string str = list2[i];
+                        int indx = selectedFolder.Length;
+                        indx++;
+                        str = str.Remove(0, indx);
+                        pathDc.Add(list2[i], str);
+                    }
+                    filePaths = list2.ToArray();
+
+                    listBox1.Items.Clear();
+
+                    foreach (KeyValuePair<string, string> item in pathDc)
+                    {
+                        if (!item.Value.Contains(".isx"))
+                        {
+                            listBox1.Items.Add(item.Value);
+                        }
                     }
                 }
-                list.Sort((x, y) => y.CreationTime.CompareTo(x.CreationTime));
-
-                List<string> list2 = new List<string>();
-                for (int i = 0; i < list.Count; i++)
-                {
-                    list2.Add(list[i].FullName);
-                }
-                for (int i = 0; i < list2.Count; i++)
-                {
-                    string str = list2[i];
-                    int indx = selectedFolder.Length;
-                    indx++;
-                    str = str.Remove(0, indx);
-                    pathDc.Add(list2[i], str);
-                }
-                filePaths = list2.ToArray();
-
-                listBox1.Items.Clear();
-
-                foreach (KeyValuePair<string, string> item in pathDc)
-                {
-                    if (!item.Value.Contains(".isx"))
-                    {
-                        listBox1.Items.Add(item.Value);
-                    }
-                }
             }
-
-
+          
             trackBar1.Minimum = 1;
             trackBar1.Maximum = 5;
             trackBar1.SmallChange = 1;
