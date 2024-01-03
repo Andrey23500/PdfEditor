@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -14,15 +11,14 @@ namespace PdfEditor
 {
     public partial class PdfEditor : Form
     {
-        string selectedFolder; //Выбранная директория
-        string[] filePaths; //Пути файлов
+        string selectedFolder;
+        string[] filePaths;
         Dictionary<string, string> pathDc = new Dictionary<string, string>();
-        int currentPage = 0; //Текущая страница
-        int maxPages = 0; //Количество страниц
-        PdfiumViewer.PdfDocument document = null; //PDF документ
-        string documentPath = null;//Путь документа
-        List<string> chetv = new List<string>();//Четверть
-        Image currentImage = null; //Изображение текущей страницы
+        int currentPage = 0;
+        int maxPages = 0;
+        PdfiumViewer.PdfDocument document = null;
+        string documentPath = null;
+        Image currentImage = null;
 
         //Рисование на форме
         bool isActiveDraw = false;
@@ -32,6 +28,7 @@ namespace PdfEditor
         public PdfEditor()
         {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -49,50 +46,58 @@ namespace PdfEditor
                 selectedFolder = fbd.SelectedPath;
                 if (selectedFolder != String.Empty)
                 {
-                    var info = new DirectoryInfo(selectedFolder);
-                    var fileIO = info.GetFiles("*.pdf", SearchOption.AllDirectories);
-                    List<FileInfo> list = new List<FileInfo>();
-                    for (int i = 0; i < fileIO.Length; i++)
+                    DirectoryInfo info = new DirectoryInfo(selectedFolder);
+                    FileInfo[] fileIO = info.GetFiles("*.pdf", SearchOption.AllDirectories);
+                    List<FileInfo> filesList = new List<FileInfo>();
+                    if (fileIO.Length == 0)
                     {
-                        if (fileIO[i].Exists)
+                        MessageBox.Show("Not found .pdf files");
+                    }
+                    else
+                    {
+                        for (int i = 0; i < fileIO.Length; i++)
                         {
-                            list.Add(fileIO[i]);
+                            if (fileIO[i].Exists)
+                            {
+                                filesList.Add(fileIO[i]);
+                            }
                         }
-                    }
-                    list.Sort((x, y) => y.CreationTime.CompareTo(x.CreationTime));
+                        filesList.Sort((x, y) => y.CreationTime.CompareTo(x.CreationTime));
 
-                    List<string> list2 = new List<string>();
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        list2.Add(list[i].FullName);
-                    }
-                    for (int i = 0; i < list2.Count; i++)
-                    {
-                        string str = list2[i];
-                        int indx = selectedFolder.Length;
-                        indx++;
-                        str = str.Remove(0, indx);
-                        pathDc.Add(list2[i], str);
-                    }
-                    filePaths = list2.ToArray();
-
-                    listBox1.Items.Clear();
-
-                    foreach (KeyValuePair<string, string> item in pathDc)
-                    {
-                        if (!item.Value.Contains(".isx"))
+                        List<string> filesListName = new List<string>();
+                        for (int i = 0; i < filesList.Count; i++)
                         {
-                            listBox1.Items.Add(item.Value);
+                            filesListName.Add(filesList[i].FullName);
                         }
+                        for (int i = 0; i < filesListName.Count; i++)
+                        {
+                            string str = filesListName[i];
+                            int indx = selectedFolder.Length;
+                            indx++;
+                            str = str.Remove(0, indx);
+                            pathDc.Add(filesListName[i], str);
+                        }
+                        filePaths = filesListName.ToArray();
+                        listBox1.Items.Clear();
+
+                        foreach (KeyValuePair<string, string> item in pathDc)
+                        {
+                            if (!item.Value.Contains(".isx"))
+                            {
+                                listBox1.Items.Add(item.Value);
+                            }
+                        }
+                        listBox1.Visible = true;
+                        label5.Visible = true;
+                        textBox1.Visible = true;
+                        trackBar1.Minimum = 1;
+                        trackBar1.Maximum = 5;
+                        trackBar1.SmallChange = 1;
+                        trackBar1.LargeChange = 1;
+                        trackBar1.UseWaitCursor = false;
                     }
                 }
             }
-          
-            trackBar1.Minimum = 1;
-            trackBar1.Maximum = 5;
-            trackBar1.SmallChange = 1;
-            trackBar1.LargeChange = 1;
-            trackBar1.UseWaitCursor = false;
         }
         //Открытие документа
         private void listBox1_DoubleClick(object sender, EventArgs e)
@@ -113,7 +118,7 @@ namespace PdfEditor
                 currentPage = 0;
                 currentImage = document.Render(currentPage, 1000000, 1000000, true);
                 pictureBox1.Image = currentImage;
-                label1.Text = $" из {maxPages}";
+                label1.Text = $" of {maxPages}";
                 button3.Visible = true;
                 button4.Visible = true;
                 label1.Visible = true;
@@ -122,6 +127,7 @@ namespace PdfEditor
                 textBox2.Visible = true;
                 trackBar1.Visible = true;
                 pictureBox1.Visible = true;
+                panel1.Visible = true;
                 trackBar1.Value = 1;
                 textBox2.TextChanged -= textBox2_TextChanged;
                 textBox2.Text = (currentPage + 1).ToString();
@@ -136,7 +142,7 @@ namespace PdfEditor
                 currentPage--;
                 currentImage = document.Render(currentPage, 1000000, 1000000, true);
                 pictureBox1.Image = currentImage;
-                label1.Text = $" из {maxPages}";
+                label1.Text = $" of {maxPages}";
                 textBox2.TextChanged -= textBox2_TextChanged;
                 textBox2.Text = (currentPage + 1).ToString();
                 textBox2.TextChanged += textBox2_TextChanged;
@@ -155,7 +161,7 @@ namespace PdfEditor
                 currentPage++;
                 currentImage = document.Render(currentPage, 1000000, 1000000, true);
                 pictureBox1.Image = currentImage;
-                label1.Text = $" из {maxPages}";
+                label1.Text = $" of {maxPages}";
                 textBox2.TextChanged -= textBox2_TextChanged;
                 textBox2.Text = (currentPage + 1).ToString();
                 textBox2.TextChanged += textBox2_TextChanged;
@@ -179,7 +185,7 @@ namespace PdfEditor
             }
             for (int i = listBox1.Items.Count - 1; i >= 0; i--)
             {
-                if (listBox1.Items[i].ToString().Contains(textBox1.Text))
+                if (listBox1.Items[i].ToString().ToLower().Contains(textBox1.Text.ToLower()))
                 {
                     listBox1.SetSelected(i, true);
                 }
@@ -206,7 +212,7 @@ namespace PdfEditor
                 }
                 currentImage = document.Render(currentPage, 1000000, 1000000, true);
                 pictureBox1.Image = currentImage;
-                label1.Text = $" из {maxPages}";
+                label1.Text = $" of {maxPages}";
                 textBox2.Text = (currentPage + 1).ToString();
                 trackBar1.Value = 1;
             }
@@ -247,7 +253,6 @@ namespace PdfEditor
             if (isDraw) // Если было рисование на picturebox
             {
                 toLog();
-                chetv.Clear();
                 EncoderParameters encoderParameters = new EncoderParameters(1);
                 encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Compression, 100);
                 currentImage.Save(documentPath + ".jpg", ImageCodecInfo.GetImageEncoders()[1], encoderParameters);
@@ -313,17 +318,8 @@ namespace PdfEditor
         }
         private void toLog()
         {
-            string chetvOut = "";
-            for (int i = 0; i < chetv.Count; i++)
-            {
-                if (i != 0)
-                {
-                    chetvOut += ",";
-                }
-                chetvOut += chetv[i];
-            }
             StreamWriter sw = File.AppendText("logs.txt");
-            sw.WriteLine($"Дата:" + DateTime.UtcNow.Date.ToString("dd-MM-yy") + " | Время:" + DateTime.Now.ToString("HH:mm:ss tt") + "| Файл:" + documentPath + " | Лист:" + (currentPage + 1).ToString() + " | Четверть:" + chetvOut);
+            sw.WriteLine($"Date:" + DateTime.UtcNow.Date.ToString("dd-MM-yy") + " | Time:" + DateTime.Now.ToString("HH:mm:ss tt") + "| File:" + documentPath + " | Page:" + (currentPage + 1).ToString());
             sw.Close();
         }
 
@@ -385,42 +381,11 @@ namespace PdfEditor
                 document.Save(newSave);
                 filePaths = Directory.GetFiles(selectedFolder, "*.pdf", SearchOption.AllDirectories);
             }
-            //Четверти
-            int part = currentImage.Height / 4;
             if (isActiveDraw)
             {
                 lastPoint = e.Location;
                 isMouseDown = true;
                 isDraw = true;
-                if (e.Location.Y > 0 && e.Location.Y < (part * trackBar1.Value))
-                {
-                    if (!chetv.Contains("1"))
-                    {
-                        chetv.Add("1");
-                    }
-                }
-                else if (e.Location.Y > (part * trackBar1.Value) && e.Location.Y < (2 * part * trackBar1.Value))
-                {
-                    if (!chetv.Contains("2"))
-                    {
-                        chetv.Add("2");
-                    }
-                }
-                else if (e.Location.Y > (2 * part * trackBar1.Value) && e.Location.Y < (3 * part * trackBar1.Value))
-                {
-
-                    if (!chetv.Contains("3"))
-                    {
-                        chetv.Add("3");
-                    }
-                }
-                else if (e.Location.Y > (3 * part * trackBar1.Value) && e.Location.Y < (currentImage.Height * trackBar1.Value))
-                {
-                    if (!chetv.Contains("4"))
-                    {
-                        chetv.Add("4");
-                    }
-                }
             }
         }
     }

@@ -39,3 +39,4 @@ C:\Users\Администратор\Desktop\PdfEditor\obj\Debug\PdfEditor.csproj
 C:\Users\Администратор\Desktop\PdfEditor\obj\Debug\PdfEditor.csproj.CopyComplete
 C:\Users\Администратор\Desktop\PdfEditor\obj\Debug\PdfEditor.exe
 C:\Users\Администратор\Desktop\PdfEditor\obj\Debug\PdfEditor.pdb
+C:\Users\Администратор\Desktop\PdfEditor\obj\Debug\PdfEditor.csproj.AssemblyReference.cache
